@@ -2,11 +2,7 @@ class RecordForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.statusList = ["This order is awaiting payment",
-                       "The supplier is processing order",
-                       "The seller has shipped order",
-                       "Delivered",
-                       "Not delivered"];
+    this.statusList = this.props.statusList;
     this.handleNewRecord = this.props.handleNewRecord;
 
     this.state = { status: this.statusList[0] };
@@ -26,7 +22,7 @@ class RecordForm extends React.Component {
 
     $.ajax({
       type: 'POST',
-      url: 'http://localhost:3000/records',
+      url: '/records/',
       data: { record: this.state },
       success: (data) => {
         this.handleNewRecord(data);
