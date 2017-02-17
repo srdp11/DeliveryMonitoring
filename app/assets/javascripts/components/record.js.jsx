@@ -85,8 +85,8 @@ class Record extends React.Component {
         </td>
         <td><input className="form-control" ref="phone_num" defaultValue={ this.props.record.phone_num } onChange={ this.handleChange } /></td>
         <td>
-          <button className="btn btn-default" onClick={ this.handleEdit }>Update</button>
-          <button className="btn btn-default" onClick={ this.handleToggle }>Cancel</button>
+          <button className="btn btn-default btn-sm" onClick={ this.handleEdit }>Update</button>
+          <button className="btn btn-default btn-sm" onClick={ this.handleToggle }>Cancel</button>
         </td>
       </tr>
     );
