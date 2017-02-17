@@ -50,7 +50,7 @@ class Records extends React.Component {
           <tbody>
             {
               this.state.records.map((record) => {
-                return <Record record={ record } statusList={ this.statusList } updateRecord={ this.updateRecord }/>;
+                return <Record record={ record } statusList={ this.statusList } updateRecord={ this.updateRecord } />;
               })
             }
           </tbody>
