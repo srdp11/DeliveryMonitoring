@@ -2,8 +2,8 @@ class ClientInfo extends React.Component {
   constructor(props) {
     super(props);
 
-    this.phone_num = this.props.phone_num;
     this.state = {
+      phone_num: this.props.phone_num,
       records: this.props.records,
       status_list: this.props.status_list
     };
@@ -78,7 +78,7 @@ class ClientInfo extends React.Component {
   render() {
     return (
       <div className="container">
-        <h3>Phone: { this.phone_num }</h3>
+        <h3>Phone: { this.state.phone_num }</h3>
         <h3>Orders:</h3>
 
         {

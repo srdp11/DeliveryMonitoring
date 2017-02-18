@@ -10,7 +10,11 @@ class ClientsController < ApplicationController
 
     mail_id_list = @records.pluck(:mail_id)
     @status_list = Hash[mail_id_list.collect { |mail_id| [mail_id, PrevStatus.where(mail_id: mail_id).pluck(:status)] }]
-    puts @status_list
-    render file: "app/views/clients/profile.html.erb"
+
+    if @records.empty? || !Record.exists?(mail_id: params[:mail_id])
+      render body: nil, status: 400, content_type: 'text/html'
+    else
+      render json: { phone_num: @phone_num, "records": @records, "status_list": @status_list }
+    end
   end
 end
