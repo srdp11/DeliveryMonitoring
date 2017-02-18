@@ -51,5 +51,9 @@
 }
 
 .collapse-btn {
-  width: 500px;
+  width: 400px;
+}
+
+em {
+  margin-left: 15px;
 }

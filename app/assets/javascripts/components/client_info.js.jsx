@@ -3,13 +3,20 @@ class ClientInfo extends React.Component {
     super(props);
 
     this.phone_num = this.props.phone_num;
-    this.records = this.props.records;
+    this.state = {
+      records: this.props.records,
+      status_list: this.props.status_list
+    };
   }
 
   collapseRow(record) {
     return (
       <div className="wrap">
-        <button className="btn btn-info collapse-btn" data-toggle="collapse" data-target={"#".concat(record.mail_id )}>{ record.mail_id }</button>
+        <button className="btn btn-info collapse-btn text-left" data-toggle="collapse" data-target={"#".concat(record.mail_id)}>
+          <span className="pull-left">
+            { "Order number: ".concat(record.mail_id) }
+          </span>
+        </button>
 
         <div id={ record.mail_id } className="collapse">
           <div className="info-block">
@@ -23,9 +30,46 @@ class ClientInfo extends React.Component {
           </div>
 
           <div className="info-block">
-            <label>Status:</label>
+            <label>Current status:</label>
             <span>{ record.status }</span>
           </div>
+
+          <div className="info-block">
+            { this.statusListCollapse(this.state.status_list[record.mail_id], record.mail_id) }
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  statusListCollapse(status_list, mail_id) {
+    let block;
+
+    if (status_list.length > 0) {
+      block = (
+        <ul>
+        {
+          status_list.map((item) => {
+            return (
+              <li>{ item }</li>
+            );
+          })
+        }
+        </ul>
+      )
+    }
+    else {
+      block = (
+        <em>History is empty</em>
+      )
+    }
+
+    return (
+      <div className="wrap">
+        <button className="btn btn-info" data-toggle="collapse" data-target={ "#status_".concat(mail_id) }>Status history</button>
+
+        <div id={ "status_".concat(mail_id) } className="collapse">
+          { block }
         </div>
       </div>
     );
@@ -38,28 +82,11 @@ class ClientInfo extends React.Component {
         <h3>Orders:</h3>
 
         {
-        this.records.map((record) => {
-          return this.collapseRow(record);
-        })
-      }
-        {/*
-        <table className="table table-hover">
-          <thead>
-            <th>ID</th>
-            <th>Sender address</th>
-            <th>Recipient address</th>
-            <th>Status</th>
-          </thead>
-          <tbody>
-            {
-              this.records.map((record) => {
-                return this.collapseRow(record);
-              })
-            }
-          </tbody>
-        </table>
-        */}
-    </div>
+          this.state.records.map((record) => {
+            return this.collapseRow(record);
+          })
+        }
+      </div>
     );
   }
 }

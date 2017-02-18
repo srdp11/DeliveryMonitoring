@@ -7,6 +7,6 @@ class Record < ApplicationRecord
   before_update :save_status_changes, if: :status_changed?
 
   def save_status_changes
-    PrevStatus.create(mail_id: self.mail_id, status: self.status_was, updated_at: self.updated_at)
+    PrevStatus.create(mail_id: self.mail_id, status: self.status_was, updated_at: self.updated_at_was)
   end
 end
