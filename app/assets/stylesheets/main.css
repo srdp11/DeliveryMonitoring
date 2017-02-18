@@ -44,3 +44,12 @@
 .control-label {
   font-size: 17px;
 }
+
+.info-block {
+  display: block;
+  margin-left: 20px;
+}
+
+.collapse-btn {
+  width: 500px;
+}
