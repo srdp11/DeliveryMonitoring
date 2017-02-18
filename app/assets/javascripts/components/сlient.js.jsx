@@ -3,12 +3,15 @@ class Client extends React.Component {
     super(props);
 
     this.state = {
-      mode: "login"
+      mode: "login",
+      failed_auth: false
     }
 
     this.changeMode = this.changeMode.bind(this);
     this.setPhoneNum = this.setPhoneNum.bind(this);
     this.updateProfileInfo = this.updateProfileInfo.bind(this);
+    this.isFailedAuth = this.isFailedAuth.bind(this);
+    this.setAuthStatus = this.setAuthStatus.bind(this);
   }
 
   changeMode() {
@@ -24,6 +27,16 @@ class Client extends React.Component {
     }
   }
 
+  isFailedAuth() {
+    return this.state.failed_auth;
+  }
+
+  setAuthStatus(status) {
+    this.setState({
+      failed_auth: status
+    });
+  }
+
   setPhoneNum(phone_num) {
     this.setState({
       phone_num: phone_num
@@ -35,16 +48,22 @@ class Client extends React.Component {
       records: records,
       status_list: status_list
     })
-
-    console.log(this.state);
   }
 
   render() {
     if (this.state.mode == "login") {
-      return <ClientLoginForm changeMode={ this.changeMode } setPhoneNum={ this.setPhoneNum } updateProfileInfo={ this.updateProfileInfo }  />
+      return <ClientLoginForm changeMode={ this.changeMode }
+                              setPhoneNum={ this.setPhoneNum }
+                              updateProfileInfo={ this.updateProfileInfo }
+                              setAuthStatus={ this.setAuthStatus }
+                              isFailedAuth={ this.isFailedAuth }
+                              />
     }
     else if (this.state.mode == "client_info") {
-      return <ClientInfo phone_num={ this.state.phone_num } records={ this.state.records } status_list={ this.state.status_list } />
+      return <ClientInfo phone_num={ this.state.phone_num }
+                         records={ this.state.records }
+                         status_list={ this.state.status_list }
+                          />
     }
   }
 }
