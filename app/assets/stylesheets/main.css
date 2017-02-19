@@ -61,3 +61,8 @@ em {
 .wrap {
   margin-bottom: 5px;
 }
+
+.record-info {
+  float: left;
+  width: 200px;
+}

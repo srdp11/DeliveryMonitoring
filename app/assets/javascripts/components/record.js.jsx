@@ -25,12 +25,13 @@ class Record extends React.Component {
     event.preventDefault();
 
     data = {
-      mail_id: this.refs.mail_id.value,
+      mail_id: this.props.record.mail_id,
       sender_address: this.refs.sender_address.value,
       recipient_address: this.refs.recipient_address.value,
       status: this.refs.status.value,
       phone_num: this.refs.phone_num.value
     }
+    console.log(data);
 
     $.ajax({
       type: 'PUT',
@@ -56,14 +57,27 @@ class Record extends React.Component {
   }
 
   recordDisplayMode() {
+    var editBlock;
+
+    if (this.props.record.status !== "Delivered") {
+      editBlock = (
+        <td><button className="btn btn-default" onClick={ this.handleToggle }>Edit</button></td>
+      )
+    }
+    else {
+      editBlock = (
+        <td></td>
+      )
+    }
+
     return(
       <tr>
-        <td>{ this.props.record.mail_id }</td>
-        <td>{ this.props.record.sender_address }</td>
-        <td>{ this.props.record.recipient_address }</td>
-        <td>{ this.props.record.status }</td>
-        <td>{ this.props.record.phone_num }</td>
-        <td><button className="btn btn-default" onClick={ this.handleToggle }>Edit</button></td>
+        <td><span className="record-info">{ this.props.record.mail_id }</span></td>
+        <td><span className="record-info">{ this.props.record.sender_address }</span></td>
+        <td><span className="record-info">{ this.props.record.recipient_address }</span></td>
+        <td><span className="record-info">{ this.props.record.status }</span></td>
+        <td><span className="record-info">{ this.props.record.phone_num }</span></td>
+        { editBlock }
       </tr>
     );
   }
@@ -71,7 +85,7 @@ class Record extends React.Component {
   recordFormMode() {
     return(
       <tr>
-        <td><input className="form-control" ref="mail_id" defaultValue={ this.props.record.mail_id } onChange={ this.handleChange } /></td>
+        <td><span className="record-info" ref="mail_id">{ this.props.record.mail_id }</span></td>
         <td><input className="form-control" ref="sender_address" defaultValue={ this.props.record.sender_address } onChange={ this.handleChange } /></td>
         <td><input className="form-control" ref="recipient_address" defaultValue={ this.props.record.recipient_address } onChange={ this.handleChange } /></td>
         <td>
