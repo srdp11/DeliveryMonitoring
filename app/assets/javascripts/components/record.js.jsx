@@ -4,6 +4,9 @@ class Record extends React.Component {
 
     this.statusList = this.props.statusList;
     this.updateRecord = this.props.updateRecord;
+    this.setReqStatus = this.props.setReqStatus;
+    this.getReqStatus = this.props.getReqStatus;
+
     this.state = {
       edit: false,
       record: this.props.record
@@ -31,7 +34,6 @@ class Record extends React.Component {
       status: this.refs.status.value,
       phone_num: this.refs.phone_num.value
     }
-    console.log(data);
 
     $.ajax({
       type: 'PUT',
@@ -48,9 +50,11 @@ class Record extends React.Component {
           record: updated_record
         });
 
+        this.setReqStatus(true);
         this.updateRecord(this.state.record, data);
       },
       error: (xhr, status, err) => {
+        this.setReqStatus(false);
         console.error(this.props.url, status, err.toString());
       }
     });

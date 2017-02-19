@@ -10,8 +10,11 @@ class Records extends React.Component {
 
     this.addNewRecord = this.addNewRecord.bind(this);
     this.updateRecord = this.updateRecord.bind(this);
+    this.setReqStatus = this.setReqStatus.bind(this);
+    this.getReqStatus = this.getReqStatus.bind(this);
 
     this.state = {
+      is_req_success: true,
       records: props.records
     }
   }
@@ -31,12 +34,32 @@ class Records extends React.Component {
     this.setState({ records: records });
   }
 
+  setReqStatus(status) {
+    this.setState({
+      is_req_success: status
+    });
+  }
+
+  getReqStatus() {
+    return this.state.is_req_success;
+  }
+
   render() {
+    const errorBlock = this.getReqStatus() ? "alert alert-danger hide" : "alert alert-danger";
+
     return(
       <div className="container">
         <h2>Orders</h2>
 
-        <RecordForm handleNewRecord={ this.addNewRecord } statusList={ this.statusList } />
+        <div className={ errorBlock }>
+          <strong>Error!</strong> Wrong data format! Please enter a valid data.
+        </div>
+
+        <RecordForm handleNewRecord={ this.addNewRecord }
+                    statusList={ this.statusList }
+                    setReqStatus={ this.setReqStatus }
+                    getReqStatus={ this.getReqStatus }
+                    />
 
         <table className="table table-orders">
           <thead>
@@ -50,7 +73,12 @@ class Records extends React.Component {
           <tbody>
             {
               this.state.records.map((record) => {
-                return <Record record={ record } statusList={ this.statusList } updateRecord={ this.updateRecord } />;
+                return <Record record={ record }
+                               statusList={ this.statusList }
+                               updateRecord={ this.updateRecord }
+                               setReqStatus={ this.setReqStatus }
+                               getReqStatus={ this.getReqStatus }
+                               />;
               })
             }
           </tbody>

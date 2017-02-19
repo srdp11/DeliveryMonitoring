@@ -20,7 +20,8 @@ class RecordsController < ApplicationController
     @record.update(record_params)
 
     # update don't return false in case of rollback transaction :(
-    if !@record.first.errors[:base].include?("Status is Delivered!")
+    #if !@record.first.errors[:base].include?("Status is Delivered!")
+    if @record.first.errors.empty?
       render json: @record
     else
       @record.first.errors.clear

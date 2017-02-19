@@ -4,6 +4,8 @@ class RecordForm extends React.Component {
 
     this.statusList = this.props.statusList;
     this.handleNewRecord = this.props.handleNewRecord;
+    this.setReqStatus = this.props.setReqStatus;
+    this.getReqStatus = this.props.getReqStatus;
 
     this.state = { status: this.statusList[0] };
 
@@ -27,8 +29,10 @@ class RecordForm extends React.Component {
       success: (data) => {
         this.handleNewRecord(data);
         this.refs.form.reset();
+        this.setReqStatus(true);
       },
       error: (xhr, status, err) => {
+        this.setReqStatus(false);
         console.error(this.props.url, status, err.toString());
         this.refs.form.reset();
       }
