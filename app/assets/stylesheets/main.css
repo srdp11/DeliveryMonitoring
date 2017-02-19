@@ -66,3 +66,27 @@ em {
   float: left;
   width: 200px;
 }
+
+.main-h1 {
+  text-align: center;
+}
+
+.navbar {
+  margin-top: 120px;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-elem {
+  margin-top: 5px;
+  width:80px;
+}
+
+.app-block {
+  display: flex;
+  flex-direction: row;
+}
+
+.mode-block {
+  margin-left: 40px;
+}

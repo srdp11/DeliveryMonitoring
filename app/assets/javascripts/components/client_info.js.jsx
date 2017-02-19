@@ -1,13 +1,13 @@
 class ClientInfo extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      phone_num: this.props.phone_num,
-      records: this.props.records,
-      status_list: this.props.status_list
-    };
-  }
+  // constructor(props) {
+  //   super(props);
+  //
+  //   this.state = {
+  //     phone_num: this.props.phone_num,
+  //     records: this.props.records,
+  //     status_list: this.props.status_list
+  //   };
+  // }
 
   collapseRow(record) {
     return (
@@ -35,7 +35,7 @@ class ClientInfo extends React.Component {
           </div>
 
           <div className="info-block">
-            { this.statusListCollapse(this.state.status_list[record.mail_id], record.mail_id) }
+            { this.statusListCollapse(this.props.status_list[record.mail_id], record.mail_id) }
           </div>
         </div>
       </div>
@@ -76,13 +76,14 @@ class ClientInfo extends React.Component {
   }
 
   render() {
+    console.log(this.props.records)
     return (
       <div className="container">
-        <h3>Phone: { this.state.phone_num }</h3>
+        <h3>Phone: { this.props.getPhoneNum() }</h3>
         <h3>Orders:</h3>
 
         {
-          this.state.records.map((record) => {
+          this.props.records.map((record) => {
             return this.collapseRow(record);
           })
         }

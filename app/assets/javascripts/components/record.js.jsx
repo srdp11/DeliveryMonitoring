@@ -2,25 +2,16 @@ class Record extends React.Component {
   constructor(props) {
     super(props);
 
-    this.statusList = this.props.statusList;
-    this.updateRecord = this.props.updateRecord;
-    this.setReqStatus = this.props.setReqStatus;
-    this.getReqStatus = this.props.getReqStatus;
-
     this.state = {
-      edit: false,
-      record: this.props.record
-     };
-
-    this.handleToggle = this.handleToggle.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
+      edit_record: false
+    }
   }
 
   handleToggle(event) {
     event.preventDefault();
 
     this.setState({
-      edit: !this.state.edit
+      edit_record: !this.state.edit_record
     });
   }
 
@@ -41,20 +32,15 @@ class Record extends React.Component {
       dataType: 'JSON',
       data: { record: data },
       success: (data) => {
-        updated_record = this.state.record;
+        updated_record = this.props.record;
 
         for (var prop in updated_record) updated_record[prop] = data[0][prop]
 
-        this.setState({
-          edit: false,
-          record: updated_record
-        });
-
-        this.setReqStatus(true);
-        this.updateRecord(this.state.record, data);
+        this.props.setOperatorRequestStatus(true);
+        this.props.updateRecord(this.props.record, data);
       },
       error: (xhr, status, err) => {
-        this.setReqStatus(false);
+        this.setOperatorRequestStatus(false);
         console.error(this.props.url, status, err.toString());
       }
     });
@@ -90,27 +76,27 @@ class Record extends React.Component {
     return(
       <tr>
         <td><span className="record-info" ref="mail_id">{ this.props.record.mail_id }</span></td>
-        <td><input className="form-control" ref="sender_address" defaultValue={ this.props.record.sender_address } onChange={ this.handleChange } /></td>
-        <td><input className="form-control" ref="recipient_address" defaultValue={ this.props.record.recipient_address } onChange={ this.handleChange } /></td>
+        <td><input className="form-control" ref="sender_address" defaultValue={ this.props.record.sender_address } /></td>
+        <td><input className="form-control" ref="recipient_address" defaultValue={ this.props.record.recipient_address } /></td>
         <td>
-          <select className="form-control" ref="status" defaultValue={ this.props.record.status } onChange={ this.handleChange }>
+          <select className="form-control" ref="status" defaultValue={ this.props.record.status }>
             {
-              this.statusList.map(function(item) {
+              this.props.statusList.map(function(item) {
                 return <option>{ item }</option>
               })
             }
           </select>
         </td>
-        <td><input className="form-control" ref="phone_num" defaultValue={ this.props.record.phone_num } onChange={ this.handleChange } /></td>
+        <td><input className="form-control" ref="phone_num" defaultValue={ this.props.record.phone_num } /></td>
         <td>
-          <button className="btn btn-default btn-sm" onClick={ this.handleEdit }>Update</button>
-          <button className="btn btn-default btn-sm" onClick={ this.handleToggle }>Cancel</button>
+          <button className="btn btn-default btn-sm" onClick={ (event) => this.handleEdit(event) }>Update</button>
+          <button className="btn btn-default btn-sm" onClick={ (event) => this.handleToggle(event) }>Cancel</button>
         </td>
       </tr>
     );
   }
 
   render() {
-    return this.state.edit ? this.recordFormMode() : this.recordDisplayMode();
+    return this.props.getEditStatus ? this.recordFormMode() : this.recordDisplayMode();
   }
 }

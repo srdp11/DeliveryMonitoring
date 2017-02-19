@@ -1,16 +1,4 @@
 class ClientLoginForm extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.changeMode = this.props.changeMode;
-    this.setPhoneNum = this.props.setPhoneNum;
-    this.updateProfileInfo = this.props.updateProfileInfo;
-    this.isFailedAuth= this.props.isFailedAuth;
-    this.setAuthStatus  = this.props.setAuthStatus
-
-    this.onSignin = this.onSignin.bind(this);
-  }
-
   onSignin(event) {
     event.preventDefault();
 
@@ -24,18 +12,18 @@ class ClientLoginForm extends React.Component {
       success: (data) => {
         parsed_data = data;
 
-        this.setPhoneNum(this.refs.phone_num.value);
-        this.updateProfileInfo(parsed_data.records, parsed_data.status_list);
-        this.changeMode();
+        this.props.setPhoneNum(this.refs.phone_num.value);
+        this.props.updateProfileInfo(parsed_data.records, parsed_data.status_list);
+        this.props.switchClientMode();
       },
       error: (xhr, status, err) => {
-        this.setAuthStatus(true);
+        this.props.setAuthStatus(true);
       }
     });
   }
 
   render() {
-    const authNotification = this.isFailedAuth() ? "alert alert-danger" : "alert alert-danger hide";
+    const authNotification = this.props.getAuthStatus() ? "alert alert-danger" : "alert alert-danger hide";
 
     return (
       <div className="container">
@@ -57,7 +45,7 @@ class ClientLoginForm extends React.Component {
   			      <input type="text" className="form-control" ref="mail_id" />
             </div>
 
-            <button className="btn btn-lg btn-primary btn-block" onClick={ this.onSignin }>Sign in</button>
+            <button className="btn btn-lg btn-primary btn-block" onClick={ (event) => this.onSignin(event) }>Sign in</button>
           </form>
         </div>
       </div>
