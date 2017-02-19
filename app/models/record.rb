@@ -1,3 +1,5 @@
+#ActiveSupport.halt_callback_chains_on_return_false = true
+
 class Record < ApplicationRecord
   attr_readonly :mail_id
 
@@ -6,7 +8,17 @@ class Record < ApplicationRecord
      greater_than: 0
   }
 
+  before_update :check_status
   before_update :save_status_changes, if: :status_changed?
+
+  private
+  def check_status
+    if self.status_was == "Delivered"
+      errors.add(:base, "Status is Delivered!")
+      throw(:abort)
+      #return false
+    end
+  end
 
   def save_status_changes
     PrevStatus.create(mail_id: self.mail_id, status: self.status_was, updated_at: self.updated_at_was)
