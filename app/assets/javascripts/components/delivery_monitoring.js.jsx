@@ -81,6 +81,13 @@ class DeliveryMonitoring extends React.Component {
     });
   }
 
+  resetCredentials() {
+    this.setState({
+      mail_id: "",
+      phone_num: "",
+    });
+  }
+
   refreshClientInfo() {
     this.updateClientInfo(null, this.state.mail_id, this.state.phone_num);
   }
@@ -150,6 +157,7 @@ class DeliveryMonitoring extends React.Component {
                 setAuthStatus={ this.setAuthStatus.bind(this) }
                 setPhoneNum={ this.setPhoneNum.bind(this) }
                 updateClientInfo={ this.updateClientInfo.bind(this) }
+                resetCredentials={ this.resetCredentials.bind(this) }
                 phone_num={ this.state.phone_num }
                 records={ this.state.records }
                 status_list={ this.state.status_list }

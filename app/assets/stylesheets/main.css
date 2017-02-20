@@ -90,3 +90,11 @@ em {
 .mode-block {
   margin-left: 40px;
 }
+
+.prof-block {
+  display: inline-block;
+}
+
+.btn-out {
+  height: 30px;
+}
