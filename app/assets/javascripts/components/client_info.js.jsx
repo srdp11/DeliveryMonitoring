@@ -70,7 +70,7 @@ class ClientInfo extends React.Component {
 
     this.props.resetCredentials();
     this.props.switchClientMode();
-    this.props.setAuthStatus(false)
+    this.props.setAuthStatus(false);
   }
 
   render() {

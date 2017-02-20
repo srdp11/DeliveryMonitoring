@@ -13,6 +13,7 @@ class Client extends React.Component {
       return <ClientInfo getPhoneNum={ this.props.getPhoneNum }
                          switchClientMode={ this.props.switchClientMode }
                          resetCredentials= { this.props.resetCredentials }
+                         setAuthStatus={ this.props.setAuthStatus }
                          phone_num={ this.props.phone_num }
                          records={ this.props.records }
                          status_list={ this.props.status_list }
