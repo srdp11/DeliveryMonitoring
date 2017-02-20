@@ -1,25 +1,11 @@
 class ClientLoginForm extends React.Component {
   onSignin(event) {
-    event.preventDefault();
-
-    $.ajax({
-      type: 'POST',
-      url: '/clients/',
-      data: {
-        mail_id: this.refs.mail_id.value,
-        phone_num: this.refs.phone_num.value
-      },
-      success: (data) => {
-        parsed_data = data;
-
-        this.props.setPhoneNum(this.refs.phone_num.value);
-        this.props.updateProfileInfo(parsed_data.records, parsed_data.status_list);
-        this.props.switchClientMode();
-      },
-      error: (xhr, status, err) => {
-        this.props.setAuthStatus(true);
-      }
-    });
+    this.props.updateClientInfo(event,
+                                this.refs.mail_id.value,
+                                this.refs.phone_num.value,
+                                (xhr, status, err) => {
+                                  this.props.setAuthStatus(true);
+                                });
   }
 
   render() {
@@ -45,7 +31,8 @@ class ClientLoginForm extends React.Component {
   			      <input type="text" className="form-control" ref="mail_id" />
             </div>
 
-            <button className="btn btn-lg btn-primary btn-block" onClick={ (event) => this.onSignin(event) }>Sign in</button>
+            <button className="btn btn-lg btn-primary btn-block"
+                    onClick={ (event) => this.onSignin(event) }>Sign in</button>
           </form>
         </div>
       </div>

@@ -1,14 +1,4 @@
 class ClientInfo extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //
-  //   this.state = {
-  //     phone_num: this.props.phone_num,
-  //     records: this.props.records,
-  //     status_list: this.props.status_list
-  //   };
-  // }
-
   collapseRow(record) {
     return (
       <div className="wrap">
@@ -76,7 +66,6 @@ class ClientInfo extends React.Component {
   }
 
   render() {
-    console.log(this.props.records)
     return (
       <div className="container">
         <h3>Phone: { this.props.getPhoneNum() }</h3>

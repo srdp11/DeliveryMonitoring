@@ -8,8 +8,10 @@ class RecordsController < ApplicationController
   def create
     @record = Record.new(record_params)
 
-    if @record.save
-      render json: @record
+    if !Record.exists?(mail_id: @record.mail_id) && @record.valid?
+      if @record.save
+        render json: @record
+      end
     else
       render json: @record_errors, status: :unprocessable_entity
     end

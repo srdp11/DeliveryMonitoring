@@ -34,6 +34,8 @@ class DeliveryMonitoring extends React.Component {
     });
   }
 
+
+
   updateRecord(record, data) {
     idx = this.state.records.indexOf(record);
     records = this.state.records;
@@ -56,6 +58,35 @@ class DeliveryMonitoring extends React.Component {
   }
 
   // client
+  updateClientInfo(event, mail_id, phone_num, error) {
+    if (event != null) {
+      event.preventDefault();
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: '/clients/',
+      data: {
+        mail_id: mail_id,
+        phone_num: phone_num
+      },
+      success: (data) => {
+        this.setState({
+          records: data.records,
+          status_list: data.status_list
+        });
+        this.switchClientMode();
+      },
+      error: error
+    });
+  }
+
+  refreshClientInfo() {
+    this.updateClientInfo(null, this.state.mail_id, this.state.phone_num);
+    console.log(this.state.records);
+    console.log(this.state.status);
+  }
+
   switchClientMode() {
     if (this.state.client_mode == "login") {
       this.setState({
@@ -97,13 +128,6 @@ class DeliveryMonitoring extends React.Component {
     })
   }
 
-  updateProfileInfo(records, status_list) {
-    this.setState({
-      records: records,
-      status_list: status_list
-    })
-  }
-
   render() {
     var block;
 
@@ -112,6 +136,7 @@ class DeliveryMonitoring extends React.Component {
         <Operator records={ this.state.records }
                   addNewRecord={ this.addNewRecord.bind(this) }
                   updateRecord={ this.updateRecord.bind(this) }
+                  refreshClientInfo={ this.refreshClientInfo.bind(this) }
                   getOperatorRequestStatus={ this.getOperatorRequestStatus.bind(this) }
                   setOperatorRequestStatus={ this.setOperatorRequestStatus.bind(this) }
                   getEditStatus={ this.getEditStatus.bind(this) }
@@ -126,7 +151,7 @@ class DeliveryMonitoring extends React.Component {
                 getPhoneNum={ this.getPhoneNum.bind(this) }
                 setAuthStatus={ this.setAuthStatus.bind(this) }
                 setPhoneNum={ this.setPhoneNum.bind(this) }
-                updateProfileInfo={ this.updateProfileInfo.bind(this) }
+                updateClientInfo={ this.updateClientInfo.bind(this) }
                 phone_num={ this.state.phone_num }
                 records={ this.state.records }
                 status_list={ this.state.status_list }

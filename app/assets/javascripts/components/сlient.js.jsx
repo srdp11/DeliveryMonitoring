@@ -4,7 +4,7 @@ class Client extends React.Component {
       return <ClientLoginForm switchClientMode={ this.props.switchClientMode }
                               getClientMode={ this.props.getClientMode }
                               setPhoneNum={ this.props.setPhoneNum }
-                              updateProfileInfo={ this.props.updateProfileInfo }
+                              updateClientInfo={ this.props.updateClientInfo }
                               setAuthStatus={ this.props.setAuthStatus }
                               getAuthStatus={ this.props.getAuthStatus }
                               />

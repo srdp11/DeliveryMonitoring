@@ -18,8 +18,10 @@ class Operator extends React.Component {
           <strong>Error!</strong> Wrong data format! Please enter a valid data.
         </div>
 
-        <RecordForm handleNewRecord={ this.props.addNewRecord }
+        <RecordForm addNewRecord={ this.props.addNewRecord }
                     statusList={ this.getStatusList() }
+                    updateRecord={ this.props.updateRecord }
+                    refreshClientInfo={ this.props.refreshClientInfo }
                     setOperatorRequestStatus={ this.props.setOperatorRequestStatus }
                     getOperatorRequestStatus={ this.props.getOperatorRequestStatus }
                     />

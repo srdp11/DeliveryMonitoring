@@ -2,15 +2,9 @@ class RecordForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.statusList = this.props.statusList;
-    this.handleNewRecord = this.props.handleNewRecord;
-    this.setReqStatus = this.props.setReqStatus;
-    this.getReqStatus = this.props.getReqStatus;
-
-    this.state = { status: this.statusList[0] };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      status: this.props.statusList[0]
+    };
   }
 
   handleChange(event) {
@@ -27,12 +21,14 @@ class RecordForm extends React.Component {
       url: '/records/',
       data: { record: this.state },
       success: (data) => {
-        this.handleNewRecord(data);
+        this.props.addNewRecord(data);
+        this.props.updateRecord(this.state, data)
         this.refs.form.reset();
-        this.setReqStatus(true);
+        this.props.setOperatorRequestStatus(true);
+        this.props.refreshClientInfo();
       },
       error: (xhr, status, err) => {
-        this.setReqStatus(false);
+        this.props.setOperatorRequestStatus(false);
         console.error(this.props.url, status, err.toString());
         this.refs.form.reset();
       }
@@ -44,24 +40,24 @@ class RecordForm extends React.Component {
       <form ref="form" className="add-form form-inline">
         <div className="info-block">
           <label>ID</label>
-          <input className="form-control" name="mail_id" onChange={ this.handleChange } />
+          <input className="form-control" name="mail_id" onChange={ (event) => this.handleChange(event) } />
         </div>
 
         <div className="info-block">
           <label>Sender address</label>
-          <input className="form-control" name="sender_address" onChange={ this.handleChange } />
+          <input className="form-control" name="sender_address" onChange={ (event) => this.handleChange(event)} />
         </div>
 
         <div className="info-block">
           <label>Recipient address</label>
-          <input className="form-control" name="recipient_address" onChange={ this.handleChange } />
+          <input className="form-control" name="recipient_address" onChange={ (event) => this.handleChange(event) } />
         </div>
 
         <div className="info-block">
           <label>Status</label>
-          <select className="form-control" name="status" onChange={ this.handleChange }>
+          <select className="form-control" name="status" onChange={ (event) => this.handleChange(event) }>
             {
-              this.statusList.map(function(item) {
+              this.props.statusList.map(function(item) {
                 return <option>{ item }</option>
               })
             }
@@ -70,11 +66,11 @@ class RecordForm extends React.Component {
 
         <div className="info-block">
           <label>Recipient number</label>
-          <input className="form-control" name="phone_num" onChange={ this.handleChange } />
+          <input className="form-control" name="phone_num" onChange={ (event) => this.handleChange(event) } />
         </div>
 
         <div className="info-block">
-          <button type="button" onClick={ this.handleSubmit } className="btn btn-primary btn-sbm">Create record</button>
+          <button type="button" onClick={ (event) => this.handleSubmit(event) } className="btn btn-primary btn-sbm">Create record</button>
         </div>
       </form>
     );
