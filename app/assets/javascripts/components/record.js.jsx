@@ -7,9 +7,7 @@ class Record extends React.Component {
     }
   }
 
-  handleToggle(event) {
-    event.preventDefault();
-
+  switchMode() {
     this.setState({
       edit_record: !this.state.edit_record
     });
@@ -38,9 +36,11 @@ class Record extends React.Component {
 
         this.props.setOperatorRequestStatus(true);
         this.props.updateRecord(this.props.record, data);
+        this.switchMode();
       },
       error: (xhr, status, err) => {
-        this.setOperatorRequestStatus(false);
+        this.props.setOperatorRequestStatus(false);
+        this.switchMode();
         console.error(this.props.url, status, err.toString());
       }
     });
@@ -51,7 +51,7 @@ class Record extends React.Component {
 
     if (this.props.record.status !== "Delivered") {
       editBlock = (
-        <td><button className="btn btn-default" onClick={ this.handleToggle }>Edit</button></td>
+        <td><button className="btn btn-default" onClick={ (event) => this.switchMode() }>Edit</button></td>
       )
     }
     else {
@@ -90,13 +90,13 @@ class Record extends React.Component {
         <td><input className="form-control" ref="phone_num" defaultValue={ this.props.record.phone_num } /></td>
         <td>
           <button className="btn btn-default btn-sm" onClick={ (event) => this.handleEdit(event) }>Update</button>
-          <button className="btn btn-default btn-sm" onClick={ (event) => this.handleToggle(event) }>Cancel</button>
+          <button className="btn btn-default btn-sm" onClick={ (event) => this.switchMode() }>Cancel</button>
         </td>
       </tr>
     );
   }
 
   render() {
-    return this.props.getEditStatus ? this.recordFormMode() : this.recordDisplayMode();
+    return this.state.edit_record ? this.recordFormMode() : this.recordDisplayMode();
   }
 }
