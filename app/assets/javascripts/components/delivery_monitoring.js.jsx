@@ -34,8 +34,6 @@ class DeliveryMonitoring extends React.Component {
     });
   }
 
-
-
   updateRecord(record, data) {
     idx = this.state.records.indexOf(record);
     records = this.state.records;
@@ -72,6 +70,8 @@ class DeliveryMonitoring extends React.Component {
       },
       success: (data) => {
         this.setState({
+          mail_id: mail_id,
+          phone_num: phone_num,
           records: data.records,
           status_list: data.status_list
         });
@@ -83,8 +83,6 @@ class DeliveryMonitoring extends React.Component {
 
   refreshClientInfo() {
     this.updateClientInfo(null, this.state.mail_id, this.state.phone_num);
-    console.log(this.state.records);
-    console.log(this.state.status);
   }
 
   switchClientMode() {
