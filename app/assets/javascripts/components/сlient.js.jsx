@@ -15,6 +15,7 @@ class Client extends React.Component {
                             onSignout={ this.props.onSignout }
                             phone_num={ this.props.phone_num }
                             records={ this.props.records }
+                            mail_id={ this.props.mail_id }
                             status_list={ this.props.status_list }
                             />
     }

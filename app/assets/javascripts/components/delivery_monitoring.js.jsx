@@ -196,6 +196,7 @@ class DeliveryMonitoring extends React.Component {
                 resetCredentials={ this.resetCredentials.bind(this) }
                 setupSubscription={ this.setupSubscription.bind(this) }
                 phone_num={ this.state.phone_num }
+                mail_id={ this.state.mail_id }
                 records={ this.state.client_records }
                 status_list={ this.state.status_list }
                 />
