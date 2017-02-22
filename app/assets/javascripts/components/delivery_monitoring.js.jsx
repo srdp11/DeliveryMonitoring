@@ -17,6 +17,8 @@ class DeliveryMonitoring extends React.Component {
       phone_num: this.state.phone_num,
       setState: this.setState.bind(this),
       refreshClientRecord: this.refreshClientRecord.bind(this),
+      refreshStatusList: this.refreshStatusList.bind(this),
+      state: this.state,
 
       connected: function () {
         this.perform('follow', { phone_num: this.phone_num });
@@ -27,9 +29,7 @@ class DeliveryMonitoring extends React.Component {
         const status_list = data.data.status_list;
 
         this.refreshClientRecord(record);
-        this.setState({
-          status_list: status_list
-        })
+        this.refreshStatusList(status_list);
       }
     })
   }
@@ -162,6 +162,12 @@ class DeliveryMonitoring extends React.Component {
     records = this.state.client_records;
     records.splice(idx, 1, record);
     this.setState({ client_records: records });
+  }
+
+  refreshStatusList(status_list) {
+    new_status_list =  this.state.status_list;
+    Object.assign(new_status_list, status_list);
+    this.setState({ status_list: new_status_list });
   }
 
   render() {
