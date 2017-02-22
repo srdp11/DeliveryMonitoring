@@ -3,9 +3,9 @@ class DeliveryMonitoring extends React.Component {
     super(props);
 
     this.state = {
-      records: this.props.records,
+      operator_records: this.props.records,
       app_mode: "main",
-      auth_status: false,
+      auth_status: true,
       operator_request_status: true,
       edit: false,
       client_mode: "login"
@@ -15,9 +15,8 @@ class DeliveryMonitoring extends React.Component {
   setupSubscription() {
     App.comments = App.cable.subscriptions.create("UpdaterChannel", {
       phone_num: this.state.phone_num,
-      updateRecord: this.updateRecord.bind(this),
       setState: this.setState.bind(this),
-      state: this.state,
+      refreshClientRecord: this.refreshClientRecord.bind(this),
 
       connected: function () {
         this.perform('follow', { phone_num: this.phone_num });
@@ -27,13 +26,13 @@ class DeliveryMonitoring extends React.Component {
         const record = data.data.record;
         const status_list = data.data.status_list;
 
-        this.updateRecord(this.state.records.find(x => x.mail_id == record.mail_id), record);
+        this.refreshClientRecord(record);
         this.setState({
           status_list: status_list
         })
       }
     })
-}
+  }
 
   // modes
   operatorMode() {
@@ -50,25 +49,18 @@ class DeliveryMonitoring extends React.Component {
 
   // operator
   addNewRecord(record) {
-    records = this.state.records.slice();
+    records = this.state.operator_records.slice();
     records.push(record);
     this.setState({
-      records: records
+      operator_records: records
     });
   }
 
   refreshOperatorRecord(record) {
-    idx = this.state.records.findIndex(x => x.mail_id == record.mail_id);
-    records = this.state.records;
-    records.splice(idx, 1, data);
-    this.setState({ records: records });
-  }
-
-  updateRecord(record, data) {
-    idx = this.state.records.indexOf(record);
-    records = this.state.records;
-    records.splice(idx, 1, data);
-    this.setState({ records: records });
+    idx = this.state.operator_records.findIndex(x => x.mail_id == record.mail_id);
+    records = this.state.operator_records;
+    records.splice(idx, 1, record);
+    this.setState({ operator_records: records });
   }
 
   setOperatorRequestStatus(status) {
@@ -86,10 +78,8 @@ class DeliveryMonitoring extends React.Component {
   }
 
   // client
-  updateClientInfo(event, mail_id, phone_num, error) {
-    if (event != null) {
-      event.preventDefault();
-    }
+  onSignin(event, mail_id, phone_num) {
+    event.preventDefault();
 
     $.ajax({
       type: 'POST',
@@ -102,15 +92,25 @@ class DeliveryMonitoring extends React.Component {
         this.setState({
           mail_id: mail_id,
           phone_num: phone_num,
-          records: data.records,
+          client_records: data.records,
           status_list: data.status_list
         });
 
         this.switchClientMode();
         this.setupSubscription();
       },
-      error: error
+      error: (xhr, status, err) => {
+        this.setAuthStatus(false);
+      }
     });
+  }
+
+  onSignout(event) {
+    event.preventDefault();
+
+    this.resetCredentials();
+    this.switchClientMode();
+    this.setAuthStatus(true);
   }
 
   resetCredentials() {
@@ -118,10 +118,6 @@ class DeliveryMonitoring extends React.Component {
       mail_id: "",
       phone_num: "",
     });
-  }
-
-  refreshClientInfo() {
-    this.updateClientInfo(null, this.state.mail_id, this.state.phone_num);
   }
 
   switchClientMode() {
@@ -145,18 +141,14 @@ class DeliveryMonitoring extends React.Component {
     return this.state.auth_status;
   }
 
-  getPhoneNum() {
-    return this.state.phone_num;
-  }
-
-  getProfileRecords() {
-    return this.state.records;
-  }
-
   setAuthStatus(status) {
     this.setState({
       auth_status: status
     });
+  }
+
+  getPhoneNum() {
+    return this.state.phone_num;
   }
 
   setPhoneNum(phone_num) {
@@ -165,12 +157,19 @@ class DeliveryMonitoring extends React.Component {
     })
   }
 
+  refreshClientRecord(record) {
+    idx = this.state.client_records.findIndex(x => x.mail_id == record.mail_id);
+    records = this.state.client_records;
+    records.splice(idx, 1, record);
+    this.setState({ client_records: records });
+  }
+
   render() {
     var block;
 
     if (this.state.app_mode == "operator") {
       block = (
-        <Operator records={ this.state.records }
+        <Operator records={ this.state.operator_records }
                   addNewRecord={ this.addNewRecord.bind(this) }
                   refreshOperatorRecord={ this.refreshOperatorRecord.bind(this) }
                   setOperatorRequestStatus={ this.setOperatorRequestStatus.bind(this) }
@@ -186,11 +185,12 @@ class DeliveryMonitoring extends React.Component {
                 getPhoneNum={ this.getPhoneNum.bind(this) }
                 setAuthStatus={ this.setAuthStatus.bind(this) }
                 setPhoneNum={ this.setPhoneNum.bind(this) }
-                updateClientInfo={ this.updateClientInfo.bind(this) }
+                onSignin={ this.onSignin.bind(this) }
+                onSignout={ this.onSignout.bind(this) }
                 resetCredentials={ this.resetCredentials.bind(this) }
                 setupSubscription={ this.setupSubscription.bind(this) }
                 phone_num={ this.state.phone_num }
-                records={ this.state.records }
+                records={ this.state.client_records }
                 status_list={ this.state.status_list }
                 />
       );

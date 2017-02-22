@@ -65,21 +65,13 @@ class ClientProfile extends React.Component {
     );
   }
 
-  signOut(event) {
-    event.preventDefault();
-
-    this.props.resetCredentials();
-    this.props.switchClientMode();
-    this.props.setAuthStatus(false);
-  }
-
   render() {
     return (
       <div className="container">
         <div className="prof-block">
           <h3>Phone: { this.props.getPhoneNum() }</h3>
 
-          <button className="btn btn-xs btn-primary btn-out" onClick={ (event) => this.signOut(event) }>Sign out</button>
+          <button className="btn btn-xs btn-primary btn-out" onClick={ (event) => this.props.onSignout(event) }>Sign out</button>
         </div>
 
         <h3>Orders:</h3>

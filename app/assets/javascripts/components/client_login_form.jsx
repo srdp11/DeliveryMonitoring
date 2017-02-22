@@ -1,15 +1,6 @@
 class ClientLoginForm extends React.Component {
-  onSignin(event) {
-    this.props.updateClientInfo(event,
-                                this.refs.mail_id.value,
-                                this.refs.phone_num.value,
-                                (xhr, status, err) => {
-                                  this.props.setAuthStatus(true);
-                                });                          
-  }
-
   render() {
-    const authNotification = this.props.getAuthStatus() ? "alert alert-danger" : "alert alert-danger hide";
+    const authNotification = this.props.getAuthStatus() ? "alert alert-danger hide" : "alert alert-danger";
 
     return (
       <div className="container">
@@ -32,7 +23,7 @@ class ClientLoginForm extends React.Component {
             </div>
 
             <button className="btn btn-lg btn-primary btn-block"
-                    onClick={ (event) => this.onSignin(event) }>Sign in</button>
+                    onClick={ (event) => this.props.onSignin(event, this.refs.mail_id.value, this.refs.phone_num.value) }>Sign in</button>
           </form>
         </div>
       </div>
