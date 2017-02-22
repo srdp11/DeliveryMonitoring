@@ -1,0 +1,11 @@
+// App.updater = App.cable.subscriptions.create "UpdaterChannel",
+//   connected: ->
+//     # Called when the subscription is ready for use on the server
+//
+//   disconnected: ->
+//     # Called when the subscription has been terminated by the server
+//
+//   received: (data) ->
+//     # Called when there's incoming data on the websocket for this channel
+var App = {};
+App.cable = Cable.createConsumer('ws://localhost:3000');

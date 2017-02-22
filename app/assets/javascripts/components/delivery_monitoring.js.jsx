@@ -12,6 +12,29 @@ class DeliveryMonitoring extends React.Component {
     }
   }
 
+  setupSubscription() {
+    App.comments = App.cable.subscriptions.create("UpdaterChannel", {
+      phone_num: this.state.phone_num,
+      updateRecord: this.updateRecord.bind(this),
+      setState: this.setState.bind(this),
+      state: this.state,
+
+      connected: function () {
+        this.perform('follow', { phone_num: this.phone_num });
+      },
+
+      received: function (data) {
+        const record = data.data.record;
+        const status_list = data.data.status_list;
+
+        this.updateRecord(this.state.records.find(x => x.mail_id == record.mail_id), record);
+        this.setState({
+          status_list: status_list
+        })
+      }
+    })
+}
+
   // modes
   operatorMode() {
     this.setState({
@@ -37,7 +60,7 @@ class DeliveryMonitoring extends React.Component {
   updateRecord(record, data) {
     idx = this.state.records.indexOf(record);
     records = this.state.records;
-    records.splice(idx, 1, record);
+    records.splice(idx, 1, data);
     this.setState({ records: records });
   }
 
@@ -75,7 +98,9 @@ class DeliveryMonitoring extends React.Component {
           records: data.records,
           status_list: data.status_list
         });
+
         this.switchClientMode();
+        this.setupSubscription();
       },
       error: error
     });
@@ -158,6 +183,7 @@ class DeliveryMonitoring extends React.Component {
                 setPhoneNum={ this.setPhoneNum.bind(this) }
                 updateClientInfo={ this.updateClientInfo.bind(this) }
                 resetCredentials={ this.resetCredentials.bind(this) }
+                setupSubscription={ this.setupSubscription.bind(this) }
                 phone_num={ this.state.phone_num }
                 records={ this.state.records }
                 status_list={ this.state.status_list }

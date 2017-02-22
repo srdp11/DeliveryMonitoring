@@ -5,6 +5,7 @@ class Client extends React.Component {
                               getClientMode={ this.props.getClientMode }
                               setPhoneNum={ this.props.setPhoneNum }
                               updateClientInfo={ this.props.updateClientInfo }
+                              setupSubscription={ this.props.setupSubscription }
                               setAuthStatus={ this.props.setAuthStatus }
                               getAuthStatus={ this.props.getAuthStatus }
                               />

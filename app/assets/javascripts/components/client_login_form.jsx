@@ -5,7 +5,7 @@ class ClientLoginForm extends React.Component {
                                 this.refs.phone_num.value,
                                 (xhr, status, err) => {
                                   this.props.setAuthStatus(true);
-                                });
+                                });                          
   }
 
   render() {
