@@ -11,7 +11,7 @@ class Client extends React.Component {
                               />
     }
     else if (this.props.getClientMode() == "client_info") {
-      return <ClientInfo getPhoneNum={ this.props.getPhoneNum }
+      return <ClientProfile getPhoneNum={ this.props.getPhoneNum }
                          switchClientMode={ this.props.switchClientMode }
                          resetCredentials= { this.props.resetCredentials }
                          setAuthStatus={ this.props.setAuthStatus }

@@ -1,4 +1,4 @@
-class ClientInfo extends React.Component {
+class ClientProfile extends React.Component {
   collapseRow(record) {
     return (
       <div className="wrap">
