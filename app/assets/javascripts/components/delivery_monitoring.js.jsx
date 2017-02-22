@@ -13,7 +13,7 @@ class DeliveryMonitoring extends React.Component {
   }
 
   setupSubscription() {
-    App.comments = App.cable.subscriptions.create("UpdaterChannel", {
+    App.updater = App.cable.subscriptions.create("UpdaterChannel", {
       phone_num: this.state.phone_num,
       setState: this.setState.bind(this),
       refreshClientRecord: this.refreshClientRecord.bind(this),
@@ -108,6 +108,7 @@ class DeliveryMonitoring extends React.Component {
   onSignout(event) {
     event.preventDefault();
 
+    App.updater.unsubscribe();
     this.resetCredentials();
     this.switchClientMode();
     this.setAuthStatus(true);
@@ -116,7 +117,7 @@ class DeliveryMonitoring extends React.Component {
   resetCredentials() {
     this.setState({
       mail_id: "",
-      phone_num: "",
+      phone_num: ""
     });
   }
 
