@@ -22,14 +22,11 @@ class RecordForm extends React.Component {
       data: { record: this.state },
       success: (data) => {
         this.props.addNewRecord(data);
-        this.props.updateRecord(this.state, data)
         this.refs.form.reset();
         this.props.setOperatorRequestStatus(true);
-        this.props.refreshClientInfo();
       },
       error: (xhr, status, err) => {
         this.props.setOperatorRequestStatus(false);
-        console.error(this.props.url, status, err.toString());
         this.refs.form.reset();
       }
     });

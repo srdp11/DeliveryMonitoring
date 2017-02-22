@@ -57,6 +57,13 @@ class DeliveryMonitoring extends React.Component {
     });
   }
 
+  refreshOperatorRecord(record) {
+    idx = this.state.records.findIndex(x => x.mail_id == record.mail_id);
+    records = this.state.records;
+    records.splice(idx, 1, data);
+    this.setState({ records: records });
+  }
+
   updateRecord(record, data) {
     idx = this.state.records.indexOf(record);
     records = this.state.records;
@@ -165,11 +172,9 @@ class DeliveryMonitoring extends React.Component {
       block = (
         <Operator records={ this.state.records }
                   addNewRecord={ this.addNewRecord.bind(this) }
-                  updateRecord={ this.updateRecord.bind(this) }
-                  refreshClientInfo={ this.refreshClientInfo.bind(this) }
-                  getOperatorRequestStatus={ this.getOperatorRequestStatus.bind(this) }
+                  refreshOperatorRecord={ this.refreshOperatorRecord.bind(this) }
                   setOperatorRequestStatus={ this.setOperatorRequestStatus.bind(this) }
-                  getEditStatus={ this.getEditStatus.bind(this) }
+                  getOperatorRequestStatus={ this.getOperatorRequestStatus.bind(this) }
                   />
       );
     }

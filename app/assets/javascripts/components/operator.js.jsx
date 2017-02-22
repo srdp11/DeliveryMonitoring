@@ -20,10 +20,7 @@ class Operator extends React.Component {
 
         <RecordForm addNewRecord={ this.props.addNewRecord }
                     statusList={ this.getStatusList() }
-                    updateRecord={ this.props.updateRecord }
-                    refreshClientInfo={ this.props.refreshClientInfo }
                     setOperatorRequestStatus={ this.props.setOperatorRequestStatus }
-                    getOperatorRequestStatus={ this.props.getOperatorRequestStatus }
                     />
 
         <table className="table table-orders">
@@ -40,10 +37,8 @@ class Operator extends React.Component {
               this.props.records.map((record) => {
                 return <Record record={ record }
                                statusList={ this.getStatusList() }
-                               updateRecord={ this.props.updateRecord }
+                               refreshOperatorRecord={ this.props.refreshOperatorRecord }
                                setOperatorRequestStatus={ this.props.setOperatorRequestStatus }
-                               getOperatorRequestStatus={ this.props.getOperatorRequestStatus }
-                               getEditStatus={ this.props.getEditStatus }
                                />;
               })
             }

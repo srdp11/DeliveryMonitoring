@@ -13,7 +13,7 @@ class Record extends React.Component {
     });
   }
 
-  handleEdit(event) {
+  updateRecord(event) {
     event.preventDefault();
 
     data = {
@@ -35,7 +35,7 @@ class Record extends React.Component {
         for (var prop in updated_record) updated_record[prop] = data[0][prop]
 
         this.props.setOperatorRequestStatus(true);
-        this.props.updateRecord(this.props.record, data);
+        this.props.refreshOperatorRecord(updated_record);
         this.switchMode();
       },
       error: (xhr, status, err) => {
@@ -89,7 +89,7 @@ class Record extends React.Component {
         </td>
         <td><input className="form-control" ref="phone_num" defaultValue={ this.props.record.phone_num } /></td>
         <td>
-          <button className="btn btn-default btn-sm" onClick={ (event) => this.handleEdit(event) }>Update</button>
+          <button className="btn btn-default btn-sm" onClick={ (event) => this.updateRecord(event) }>Update</button>
           <button className="btn btn-default btn-sm" onClick={ (event) => this.switchMode() }>Cancel</button>
         </td>
       </tr>
