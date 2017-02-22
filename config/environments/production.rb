@@ -27,6 +27,9 @@ Rails.application.configure do
   config.assets.js_compressor = :uglifier
   # config.assets.css_compressor = :sass
 
+  config.web_socket_server_url = "wss://action-cable-example.herokuapp.com/cable"
+  config.action_cable.allowed_request_origins = ['https://salty-river-41808.herokuapp.com/', 'https://salty-river-41808.herokuapp.com/']
+
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   #config.assets.compile = false
 
