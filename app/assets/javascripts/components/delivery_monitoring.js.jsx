@@ -2,13 +2,28 @@ class DeliveryMonitoring extends React.Component {
   constructor(props) {
     super(props);
 
+    const app_mode = sessionStorage.getItem("app_mode") ? sessionStorage.getItem("app_mode") : "main"
+    const client_mode = sessionStorage.getItem("client_mode") ? sessionStorage.getItem("client_mode") : "login"
+    const mail_id = sessionStorage.getItem("mail_id")
+    const phone_num = sessionStorage.getItem("phone_num")
+
+    const client_records = JSON.parse(sessionStorage.getItem("client_records"));
+    const status_list = JSON.parse(sessionStorage.getItem("status_list"));
+
     this.state = {
-      operator_records: this.props.records,
-      app_mode: "main",
+      operator_records: this.props.operator_records,
+      client_records: client_records,
+      status_list: status_list,
+      app_mode: app_mode,
       auth_status: true,
       operator_request_status: true,
-      edit: false,
-      client_mode: "login"
+      client_mode: client_mode,
+      mail_id: mail_id,
+      phone_num: phone_num
+    }
+
+    if (mail_id != null) {
+      this.setupSubscription();
     }
   }
 
@@ -18,6 +33,7 @@ class DeliveryMonitoring extends React.Component {
       setState: this.setState.bind(this),
       refreshClientRecord: this.refreshClientRecord.bind(this),
       refreshStatusList: this.refreshStatusList.bind(this),
+      saveClientData: this.saveClientData.bind(this),
       state: this.state,
 
       connected: function () {
@@ -30,18 +46,26 @@ class DeliveryMonitoring extends React.Component {
 
         this.refreshClientRecord(record);
         this.refreshStatusList(status_list);
+
+        this.saveClientData(this.state.client_records, this.state.status_list);
+
+        console.log(this.state);
       }
     })
   }
 
   // modes
   operatorMode() {
+    sessionStorage.setItem("app_mode", "operator")
+
     this.setState({
       app_mode: "operator"
     });
   }
 
   clientMode() {
+    sessionStorage.setItem("app_mode", "client")
+
     this.setState({
       app_mode: "client"
     });
@@ -73,10 +97,6 @@ class DeliveryMonitoring extends React.Component {
     return this.state.operator_request_status;
   }
 
-  getEditStatus() {
-    return this.state.edit;
-  }
-
   // client
   onSignin(event, mail_id, phone_num) {
     event.preventDefault();
@@ -89,13 +109,9 @@ class DeliveryMonitoring extends React.Component {
         phone_num: phone_num
       },
       success: (data) => {
-        this.setState({
-          mail_id: mail_id,
-          phone_num: phone_num,
-          client_records: data.records,
-          status_list: data.status_list
-        });
+        this.saveClientData(data.records, data.status_list);
 
+        this.setCredentials(mail_id, phone_num);
         this.switchClientMode();
         this.setupSubscription();
       },
@@ -103,6 +119,16 @@ class DeliveryMonitoring extends React.Component {
         this.setAuthStatus(false);
       }
     });
+  }
+
+  saveClientData(records, status_list) {
+    this.setState({
+      client_records: records,
+      status_list: status_list
+    });
+
+    sessionStorage.setItem("client_records", JSON.stringify(records));
+    sessionStorage.setItem("status_list", JSON.stringify(status_list));
   }
 
   onSignout(event) {
@@ -114,20 +140,37 @@ class DeliveryMonitoring extends React.Component {
     this.setAuthStatus(true);
   }
 
+  setCredentials(mail_id, phone_num) {
+    this.setState({
+      mail_id: mail_id,
+      phone_num: phone_num
+    });
+
+    sessionStorage.setItem("mail_id", mail_id);
+    sessionStorage.setItem("phone_num", phone_num);
+  }
+
   resetCredentials() {
     this.setState({
-      mail_id: "",
-      phone_num: ""
+      mail_id: null,
+      phone_num: null
     });
+
+    sessionStorage.setItem("mail_id", null);
+    sessionStorage.setItem("phone_num", null);
   }
 
   switchClientMode() {
     if (this.state.client_mode == "login") {
+      sessionStorage.setItem("client_mode", "client_info")
+
       this.setState({
         client_mode: "client_info"
       })
     }
     else {
+      sessionStorage.setItem("client_mode", "login")
+
       this.setState({
         client_mode: "login"
       })
@@ -155,7 +198,7 @@ class DeliveryMonitoring extends React.Component {
   setPhoneNum(phone_num) {
     this.setState({
       phone_num: phone_num
-    })
+    });
   }
 
   refreshClientRecord(record) {
