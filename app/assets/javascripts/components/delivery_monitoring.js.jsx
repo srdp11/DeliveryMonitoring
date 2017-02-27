@@ -7,24 +7,50 @@ class DeliveryMonitoring extends React.Component {
     const mail_id = sessionStorage.getItem("mail_id")
     const phone_num = sessionStorage.getItem("phone_num")
 
+    const operator_records = this.props.operator_records.slice().sort((a, b) => {
+      return a.mail_id - b.mail_id;
+    });
     const client_records = JSON.parse(sessionStorage.getItem("client_records"));
     const status_list = JSON.parse(sessionStorage.getItem("status_list"));
 
     this.state = {
-      operator_records: this.props.operator_records,
-      client_records: client_records,
-      status_list: status_list,
+      operator_records: operator_records,
       app_mode: app_mode,
       auth_status: true,
       operator_request_status: true,
       client_mode: client_mode,
       mail_id: mail_id,
-      phone_num: phone_num
+      phone_num: phone_num,
+      client_records: client_records,
+      status_list: status_list
     }
 
     if (mail_id != null) {
       this.setupSubscription();
     }
+  }
+
+  componentDidMount() {
+    if (this.state.mail_id != null && this.state.phone_num != null) {
+      this.requestClientData(this.state.mail_id, this.state.phone_num);
+    }
+  }
+
+  requestClientData(mail_id, phone_num) {
+    $.ajax({
+      type: 'POST',
+      url: '/clients/',
+      data: {
+        mail_id: mail_id,
+        phone_num: phone_num
+      },
+      success: (data) => {
+        this.setState({
+          client_records: data.records,
+          status_list: data.status_list
+        });
+      }
+    });
   }
 
   setupSubscription() {
@@ -48,8 +74,6 @@ class DeliveryMonitoring extends React.Component {
         this.refreshStatusList(status_list);
 
         this.saveClientData(this.state.client_records, this.state.status_list);
-
-        console.log(this.state);
       }
     })
   }
