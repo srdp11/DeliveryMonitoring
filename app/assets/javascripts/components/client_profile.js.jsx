@@ -1,40 +1,39 @@
-class ClientProfile extends React.Component {
-  collapseRow(record) {
-    var collapseClass = this.props.mail_id == record.mail_id ? "collapse in" : "collapse";
+function collapseRow(record, status_list, is_opened) {
+  var collapseClass = is_opened ? "collapse in" : "collapse";
 
-    return (
-      <div className="wrap">
-        <button className="btn btn-info collapse-btn text-left" data-toggle="collapse" data-target={"#".concat(record.mail_id)}>
-          <span className="pull-left">
-            { "Order number: ".concat(record.mail_id) }
-          </span>
-        </button>
+  return (
+    <div className="wrap">
+      <button className="btn btn-info collapse-btn text-left" data-toggle="collapse" data-target={"#".concat(record.mail_id)}>
+        <span className="pull-left">
+          { "Order number: ".concat(record.mail_id) }
+        </span>
+      </button>
 
-        <div id={ record.mail_id } className= { collapseClass }>
-          <div className="info-block">
-            <label>Sender address:</label>
-            <span>{ record.sender_address }</span>
-          </div>
+      <div id={ record.mail_id } className= { collapseClass }>
+        <div className="info-block">
+          <label>Sender address:</label>
+          <span>{ record.sender_address }</span>
+        </div>
 
-          <div className="info-block">
-            <label>Recipient address:</label>
-            <span>{ record.recipient_address }</span>
-          </div>
+        <div className="info-block">
+          <label>Recipient address:</label>
+          <span>{ record.recipient_address }</span>
+        </div>
 
-          <div className="info-block">
-            <label>Current status:</label>
-            <span>{ record.status }</span>
-          </div>
+        <div className="info-block">
+          <label>Current status:</label>
+          <span>{ record.status }</span>
+        </div>
 
-          <div className="info-block">
-            { this.statusListCollapse(this.props.status_list[record.mail_id], record.mail_id) }
-          </div>
+        <div className="info-block">
+          { statusListCollapse(status_list, record.mail_id) }
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
-  statusListCollapse(status_list, mail_id) {
+function statusListCollapse(status_list, mail_id) {
     let block;
 
     if (status_list.length > 0) {
@@ -67,29 +66,28 @@ class ClientProfile extends React.Component {
     );
   }
 
-  render() {
-    var records = this.props.records;
+const ClientProfile = (props) => {
+  var records = props.records;
 
-    const firstElement = records.find(x => x.mail_id == this.props.mail_id);
-    records = records.filter(x => x != firstElement);
-    records.unshift(firstElement);
+  const firstElement = records.find(x => x.mail_id == props.mail_id);
+  records = records.filter(x => x != firstElement);
+  records.unshift(firstElement);
 
-    return (
-      <div className="container">
-        <div className="prof-block">
-          <h3>Phone: { this.props.getPhoneNum() }</h3>
+  return (
+    <div className="container">
+      <div className="prof-block">
+        <h3>Phone: { props.getPhoneNum() }</h3>
 
-          <button className="btn btn-xs btn-primary btn-out" onClick={ (event) => this.props.onSignout(event) }>Sign out</button>
-        </div>
-
-        <h3>Orders:</h3>
-
-        {
-          records.map((record) => {
-            return this.collapseRow(record);
-          })
-        }
+        <button className="btn btn-xs btn-primary btn-out" onClick={ (event) => props.onSignout(event) }>Sign out</button>
       </div>
-    );
-  }
+
+      <h3>Orders:</h3>
+
+      {
+        records.map((record) => {
+          return collapseRow(record, props.status_list[record.mail_id], props.mail_id == record.mail_id);
+        })
+      }
+    </div>
+  );
 }
