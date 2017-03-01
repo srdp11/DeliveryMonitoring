@@ -1,2 +1,7 @@
-<%= react_component 'DeliveryMonitoring', { operator_records: @operator_records }  %>
+<%= react_component 'DeliveryMonitoring', { operator_records: @operator_records,
+                                            is_auth: @is_auth,
+                                            mail_id: @mail_id,
+                                            phone_num: @phone_num,
+                                            client_records: @records,
+                                            status_list: @status_list } %>
 <script src="//code.jquery.com/jquery.js"></script>

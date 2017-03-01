@@ -10,6 +10,9 @@ class ClientsController < ApplicationController
     if client
       phone_num = params[:phone_num]
 
+      session[:phone_num] ||= phone_num
+      session[:mail_id] ||= params[:mail_id]
+
       records = Record.where(phone_num: phone_num)
       mail_id_list = records.pluck(:mail_id)
       status_list = Hash[mail_id_list.collect { |mail_id| [mail_id, PrevStatus.where(mail_id: mail_id).pluck(:status)] }]
@@ -18,5 +21,10 @@ class ClientsController < ApplicationController
     else
       render body: nil, status: 400, content_type: 'text/html'
     end
+  end
+
+  def destroy
+    session[:phone_num] = nil
+    session[:mail_id] = nil 
   end
 end

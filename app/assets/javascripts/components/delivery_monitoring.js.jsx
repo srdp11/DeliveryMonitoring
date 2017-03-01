@@ -3,54 +3,26 @@ class DeliveryMonitoring extends React.Component {
     super(props);
 
     const app_mode = sessionStorage.getItem("app_mode") ? sessionStorage.getItem("app_mode") : "main"
-    const client_mode = sessionStorage.getItem("client_mode") ? sessionStorage.getItem("client_mode") : "login"
-    const mail_id = sessionStorage.getItem("mail_id")
-    const phone_num = sessionStorage.getItem("phone_num")
 
     const operator_records = this.props.operator_records.slice().sort((a, b) => {
       return a.mail_id - b.mail_id;
     });
-    const client_records = JSON.parse(sessionStorage.getItem("client_records"));
-    const status_list = JSON.parse(sessionStorage.getItem("status_list"));
 
     this.state = {
       operator_records: operator_records,
       app_mode: app_mode,
-      auth_status: true,
+      is_failed_auth: false,
       operator_request_status: true,
-      client_mode: client_mode,
-      mail_id: mail_id,
-      phone_num: phone_num,
-      client_records: client_records,
-      status_list: status_list
+      mail_id: this.props.mail_id,
+      phone_num: this.props.phone_num,
+      client_records: this.props.client_records,
+      status_list: this.props.status_list,
+      is_auth: this.props.is_auth
     }
 
-    if (mail_id != null) {
+    if (this.state.mail_id != null) {
       this.setupSubscription();
     }
-  }
-
-  componentDidMount() {
-    if (this.state.mail_id != null && this.state.phone_num != null) {
-      this.requestClientData(this.state.mail_id, this.state.phone_num);
-    }
-  }
-
-  requestClientData(mail_id, phone_num) {
-    $.ajax({
-      type: 'POST',
-      url: '/clients/',
-      data: {
-        mail_id: mail_id,
-        phone_num: phone_num
-      },
-      success: (data) => {
-        this.setState({
-          client_records: data.records,
-          status_list: data.status_list
-        });
-      }
-    });
   }
 
   setupSubscription() {
@@ -96,6 +68,16 @@ class DeliveryMonitoring extends React.Component {
   }
 
   // operator
+  isAuth() {
+    return this.state.is_auth;
+  }
+
+  setAuth(status) {
+    this.setState({
+      is_auth: status
+    });
+  }
+
   addNewRecord(record) {
     records = this.state.operator_records.slice();
     records.push(record);
@@ -136,11 +118,11 @@ class DeliveryMonitoring extends React.Component {
         this.saveClientData(data.records, data.status_list);
 
         this.setCredentials(mail_id, phone_num);
-        this.switchClientMode();
+        this.setAuth(true);
         this.setupSubscription();
       },
       error: (xhr, status, err) => {
-        this.setAuthStatus(false);
+        this.setFailedAuth(true);
       }
     });
   }
@@ -150,18 +132,22 @@ class DeliveryMonitoring extends React.Component {
       client_records: records,
       status_list: status_list
     });
-
-    sessionStorage.setItem("client_records", JSON.stringify(records));
-    sessionStorage.setItem("status_list", JSON.stringify(status_list));
   }
 
   onSignout(event) {
     event.preventDefault();
 
-    App.updater.unsubscribe();
-    this.resetCredentials();
-    this.switchClientMode();
-    this.setAuthStatus(true);
+    $.ajax({
+      type: 'DELETE',
+      url: '/clients/',
+      data: {data: "33"},
+      success: (data) => {
+        App.updater.unsubscribe();
+        this.setAuth(false);
+        this.resetCredentials();
+        this.setFailedAuth(false);
+      }
+    });
   }
 
   setCredentials(mail_id, phone_num) {
@@ -169,9 +155,6 @@ class DeliveryMonitoring extends React.Component {
       mail_id: mail_id,
       phone_num: phone_num
     });
-
-    sessionStorage.setItem("mail_id", mail_id);
-    sessionStorage.setItem("phone_num", phone_num);
   }
 
   resetCredentials() {
@@ -179,39 +162,19 @@ class DeliveryMonitoring extends React.Component {
       mail_id: null,
       phone_num: null
     });
-
-    sessionStorage.setItem("mail_id", null);
-    sessionStorage.setItem("phone_num", null);
-  }
-
-  switchClientMode() {
-    if (this.state.client_mode == "login") {
-      sessionStorage.setItem("client_mode", "client_info")
-
-      this.setState({
-        client_mode: "client_info"
-      })
-    }
-    else {
-      sessionStorage.setItem("client_mode", "login")
-
-      this.setState({
-        client_mode: "login"
-      })
-    }
   }
 
   getClientMode() {
     return this.state.client_mode;
   }
 
-  getAuthStatus() {
-    return this.state.auth_status;
+  isFailedAuth() {
+    return this.state.is_failed_auth;
   }
 
-  setAuthStatus(status) {
+  setFailedAuth(status) {
     this.setState({
-      auth_status: status
+      is_failed_auth: status
     });
   }
 
@@ -253,16 +216,16 @@ class DeliveryMonitoring extends React.Component {
     }
     else if (this.state.app_mode == "client") {
       block = (
-        <Client switchClientMode={ this.switchClientMode.bind(this) }
-                getClientMode={ this.getClientMode.bind(this) }
-                getAuthStatus={ this.getAuthStatus.bind(this) }
+        <Client getClientMode={ this.getClientMode.bind(this) }
+                isFailedAuth={ this.isFailedAuth.bind(this) }
                 getPhoneNum={ this.getPhoneNum.bind(this) }
-                setAuthStatus={ this.setAuthStatus.bind(this) }
+                setFailedAuth={ this.setFailedAuth.bind(this) }
                 setPhoneNum={ this.setPhoneNum.bind(this) }
                 onSignin={ this.onSignin.bind(this) }
                 onSignout={ this.onSignout.bind(this) }
                 resetCredentials={ this.resetCredentials.bind(this) }
                 setupSubscription={ this.setupSubscription.bind(this) }
+                isAuth={ this.isAuth.bind(this) }
                 phone_num={ this.state.phone_num }
                 mail_id={ this.state.mail_id }
                 records={ this.state.client_records }

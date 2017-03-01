@@ -7,5 +7,7 @@ Rails.application.routes.draw do
   post 'records', to: 'records#create'
   put 'records', to: 'records#update'
 
+  delete 'clients', to: 'clients#destroy'
+
   mount ActionCable.server => '/cable'
 end

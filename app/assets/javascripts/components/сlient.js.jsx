@@ -1,15 +1,12 @@
 const Client = (props) => {
-  if (props.getClientMode() == "login") {
-    return <ClientLoginForm switchClientMode={ props.switchClientMode }
-                            getClientMode={ props.getClientMode }
-                            setPhoneNum={ props.setPhoneNum }
+
+  if (!props.isAuth()) {
+    return <ClientLoginForm getClientMode={ props.getClientMode }
+                            isFailedAuth={ props.isFailedAuth }
                             onSignin={ props.onSignin }
-                            setupSubscription={ props.setupSubscription }
-                            setAuthStatus={ props.setAuthStatus }
-                            getAuthStatus={ props.getAuthStatus }
                             />
   }
-  else if (props.getClientMode() == "client_info") {
+  else {
     return <ClientProfile getPhoneNum={ props.getPhoneNum }
                           onSignout={ props.onSignout }
                           phone_num={ props.phone_num }

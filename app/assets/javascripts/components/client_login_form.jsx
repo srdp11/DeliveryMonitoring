@@ -2,7 +2,7 @@ let login_phone_num_input = null;
 let login_mail_id_input = null;
 
 const ClientLoginForm = (props) => {
-  const authNotification = props.getAuthStatus() ? "alert alert-danger hide" : "alert alert-danger";
+  const authNotification = props.isFailedAuth() ? "alert alert-danger" : "alert alert-danger hide";
 
   return (
     <div className="container">
